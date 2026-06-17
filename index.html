@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0d0d0d" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Team Kinfolk" />
+  <title>Team Kinfolk</title>
+  <link rel="manifest" href="manifest.json" />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    /* ── TOKENS ──────────────────────────────────────────────── */
+    :root {
+      --bg:         #0d0d0d;
+      --surface:    #161616;
+      --surface-2:  #1e1e1e;
+      --border:     #2a2a2a;
+      --text:       #e8e8e8;
+      --muted:      #999;
+      --dim:        #6a6a6a;
+
+      --grade-a:    #00e676;
+      --grade-b:    #69f0ae;
+      --grade-c:    #ffca28;
+      --grade-d:    #ef5350;
+
+      --mono: 'IBM Plex Mono', monospace;
+      --sans: 'Inter', sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      min-height: 100dvh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── HEADER ──────────────────────────────────────────────── */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 16px 12px;
+    }
+
+    .header-top {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+    }
+
+    .wordmark {
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .wordmark span {
+      color: var(--text);
+    }
+
+    .timestamp {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--dim);
+      letter-spacing: 0.06em;
+    }
+
+    .slate-date {
+      font-family: var(--mono);
+      font-size: 22px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin-top: 6px;
+      color: var(--text);
+    }
+
+    .slate-meta {
+      display: flex;
+      gap: 12px;
+      margin-top: 5px;
+    }
+
+    .meta-pill {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    .meta-pill strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    /* ── SLATE LIST ──────────────────────────────────────────── */
+    main {
+      padding: 12px 12px 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    /* ── PITCHER CARD ────────────────────────────────────────── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .card-accent {
+      position: absolute;
+      top: 0; left: 0;
+      width: 3px;
+      height: 100%;
+      border-radius: 10px 0 0 10px;
+    }
+
+    .card-inner {
+      padding: 13px 14px 13px 18px;
+    }
+
+    /* Row 1: rank + name + grade */
+    .card-top {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .rank {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--dim);
+      min-width: 18px;
+    }
+
+    .pitcher-name {
+      font-size: 15px;
+      font-weight: 600;
+      flex: 1;
+      letter-spacing: -0.01em;
+    }
+
+    .grade-badge {
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 3px 9px;
+      border-radius: 4px;
+      letter-spacing: 0.05em;
+    }
+
+    /* Row 2: prop type tag + team matchup */
+    .card-sub {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .prop-tag {
+      font-family: var(--mono);
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 2px 7px;
+      border-radius: 3px;
+      background: var(--surface-2);
+      color: var(--muted);
+      border: 1px solid var(--border);
+    }
+
+    .matchup {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    /* Stats grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
+
+    .stat-cell {
+      background: var(--surface-2);
+      padding: 8px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .stat-label {
+      font-family: var(--mono);
+      font-size: 8px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--dim);
+    }
+
+    .stat-value {
+      font-family: var(--mono);
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1;
+    }
+
+    .stat-value.positive { color: var(--grade-a); }
+    .stat-value.negative { color: var(--grade-d); }
+
+    /* Trends + splits row */
+    .card-bottom {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .info-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+    }
+
+    .info-label {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--dim);
+      min-width: 42px;
+      padding-top: 1px;
+    }
+
+    .info-value {
+      font-size: 11px;
+      color: var(--text);
+      line-height: 1.4;
+    }
+
+    .info-value .hot { color: var(--grade-a); }
+    .info-value .warn { color: var(--grade-c); }
+
+    /* ── GRADE COLOR HELPERS ─────────────────────────────────── */
+    .grade-a-color { color: var(--grade-a); }
+    .grade-b-color { color: var(--grade-b); }
+    .grade-c-color { color: var(--grade-c); }
+    .grade-d-color { color: var(--grade-d); }
+
+    .badge-a { background: rgba(0,230,118,0.12); color: var(--grade-a); border: 1px solid rgba(0,230,118,0.25); }
+    .badge-b { background: rgba(105,240,174,0.10); color: var(--grade-b); border: 1px solid rgba(105,240,174,0.2); }
+    .badge-c { background: rgba(255,202,40,0.10); color: var(--grade-c); border: 1px solid rgba(255,202,40,0.2); }
+    .badge-d { background: rgba(239,83,80,0.10); color: var(--grade-d); border: 1px solid rgba(239,83,80,0.2); }
+
+    .accent-a { background: var(--grade-a); }
+    .accent-b { background: var(--grade-b); }
+    .accent-c { background: var(--grade-c); }
+    .accent-d { background: var(--grade-d); }
+
+    /* ── EMPTY STATE ─────────────────────────────────────────── */
+    .empty {
+      margin-top: 60px;
+      text-align: center;
+      padding: 0 32px;
+    }
+
+    .empty-icon {
+      font-size: 36px;
+      margin-bottom: 12px;
+    }
+
+    .empty-title {
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--text);
+      margin-bottom: 6px;
+      letter-spacing: 0.05em;
+    }
+
+    .empty-sub {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* ── SECTION LABEL ───────────────────────────────────────── */
+    .section-label {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--dim);
+      padding: 4px 2px 2px;
+    }
+
+    /* ── SCROLLBAR ───────────────────────────────────────────── */
+    ::-webkit-scrollbar { width: 0; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-top">
+    <div class="wordmark"><span>Team</span> Kinfolk</div>
+    <div class="timestamp" id="timestamp">—</div>
+  </div>
+  <div class="slate-date" id="slateDate">—</div>
+  <div class="slate-meta">
+    <div class="meta-pill" id="playCount"><strong>—</strong> plays</div>
+    <div class="meta-pill" id="gradeBreakdown">—</div>
+  </div>
+</header>
+
+<main id="slateContainer">
+  <div class="empty">
+    <div class="empty-icon">⚾</div>
+    <div class="empty-title">No slate loaded</div>
+    <div class="empty-sub">Run the pipeline to push today's plays here. They'll appear ranked best to worst.</div>
+  </div>
+</main>
+
+<script>
+  // ── SAMPLE DATA (replace with pipeline output) ──────────────
+  // To inject real data: set window.KINFOLK_SLATE before this script runs,
+  // or call window.loadSlate(data) from your pipeline.
+  //
+  // Data shape:
+  // {
+  //   date: "June 17, 2025",
+  //   updatedAt: "2025-06-17T14:32:00",
+  //   plays: [
+  //     {
+  //       rank: 1,
+  //       grade: "A",           // A | B | C | D
+  //       pitcher: "Zack Wheeler",
+  //       team: "PHI",
+  //       opponent: "NYM",
+  //       prop: "Strikeouts",   // Strikeouts | Hits Allowed | Walks | Earned Runs | Outs
+  //       line: 6.5,
+  //       direction: "Over",    // Over | Under
+  //       cbProjection: 7.8,
+  //       edgeGap: "+1.3",
+  //       odds: "-115",
+  //       trends: "4 of last 5 Over. Avg 7.2 K last 3 starts.",
+  //       splits: "vs RHH: .198 BA. Home: 7.4 K avg."
+  //     }
+  //   ]
+  // }
+
+  const DEMO_SLATE = {
+    date: "June 17, 2026",
+    updatedAt: new Date().toISOString(),
+    plays: [
+      {
+        rank: 1,
+        grade: "A",
+        pitcher: "Zack Wheeler",
+        team: "PHI",
+        opponent: "NYM",
+        prop: "Strikeouts",
+        line: 6.5,
+        direction: "Over",
+        cbProjection: 7.8,
+        edgeGap: "+1.3",
+        odds: "-112",
+        trends: "4 of last 5 Over. Averaging 7.2 K over last 3 starts.",
+        splits: "vs RHH: .198 BA. Strikeout rate up 8% at home."
+      },
+      {
+        rank: 2,
+        grade: "A",
+        pitcher: "Corbin Burnes",
+        team: "ARI",
+        opponent: "COL",
+        prop: "Outs",
+        line: 17.5,
+        direction: "Over",
+        cbProjection: 19.2,
+        edgeGap: "+1.7",
+        odds: "+102",
+        trends: "Hit Over in 3 straight. Deep into games vs. weak lineups.",
+        splits: "vs COL this season: 19 outs avg. Coors neutral — dome game."
+      },
+      {
+        rank: 3,
+        grade: "B",
+        pitcher: "Logan Gilbert",
+        team: "SEA",
+        opponent: "OAK",
+        prop: "Strikeouts",
+        line: 5.5,
+        direction: "Over",
+        cbProjection: 6.9,
+        edgeGap: "+1.4",
+        odds: "-118",
+        trends: "3 of last 4 Over. Elevated K rate last 2 weeks.",
+        splits: "OAK K% 24.1 vs RHP this month — top-5 strikeout team."
+      },
+      {
+        rank: 4,
+        grade: "C",
+        pitcher: "Marcus Stroman",
+        team: "CHC",
+        opponent: "MIL",
+        prop: "Hits Allowed",
+        line: 5.5,
+        direction: "Under",
+        cbProjection: 4.8,
+        edgeGap: "-0.7",
+        odds: "-105",
+        trends: "Under in 2 of last 3. GB-heavy profile limits extra-base damage.",
+        splits: "MIL .261 BA vs RHP — moderate. Monitor lineup card."
+      },
+      {
+        rank: 5,
+        grade: "D",
+        pitcher: "Chad Kuhl",
+        team: "COL",
+        opponent: "LAD",
+        prop: "Walks",
+        line: 2.5,
+        direction: "Under",
+        cbProjection: 3.4,
+        edgeGap: "+0.9",
+        odds: "+108",
+        trends: "Walk rate spiking — 4+ in 2 of last 3. No edge confirmed.",
+        splits: "LAD patient lineup: 4th in BB drawn vs RHP. High risk."
+      }
+    ]
+  };
+
+  // ── RENDER ───────────────────────────────────────────────────
+  function gradeClass(g) {
+    return { A: 'a', B: 'b', C: 'c', D: 'd' }[g] || 'c';
+  }
+
+  function formatTime(iso) {
+    const d = new Date(iso);
+    return d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+  }
+
+  function renderSlate(slate) {
+    const plays = slate.plays || [];
+    const container = document.getElementById('slateContainer');
+
+    document.getElementById('slateDate').textContent = slate.date || '—';
+    document.getElementById('timestamp').textContent = slate.updatedAt
+      ? 'Updated ' + formatTime(slate.updatedAt)
+      : '—';
+
+    const counts = { A: 0, B: 0, C: 0, D: 0 };
+    plays.forEach(p => counts[p.grade] = (counts[p.grade] || 0) + 1);
+    document.getElementById('playCount').innerHTML = `<strong>${plays.length}</strong> plays`;
+
+    const breakdown = ['A','B','C','D']
+      .filter(g => counts[g] > 0)
+      .map(g => `<strong>${counts[g]}${g}</strong>`)
+      .join(' · ');
+    document.getElementById('gradeBreakdown').innerHTML = breakdown;
+
+    if (!plays.length) return;
+
+    let html = '';
+    let lastGrade = null;
+
+    plays.forEach(play => {
+      const g = gradeClass(play.grade);
+      const edgePositive = play.edgeGap && !play.edgeGap.startsWith('-');
+
+      if (play.grade !== lastGrade) {
+        html += `<div class="section-label">Grade ${play.grade}</div>`;
+        lastGrade = play.grade;
+      }
+
+      html += `
+        <div class="card">
+          <div class="card-accent accent-${g}"></div>
+          <div class="card-inner">
+
+            <div class="card-top">
+              <div class="rank">${play.rank}</div>
+              <div class="pitcher-name">${play.pitcher}</div>
+              <div class="grade-badge badge-${g}">${play.grade}</div>
+            </div>
+
+            <div class="card-sub">
+              <div class="prop-tag">${play.prop}</div>
+              <div class="matchup">${play.team} vs ${play.opponent} · ${play.direction} ${play.line} · ${play.odds}</div>
+            </div>
+
+            <div class="stats-grid">
+              <div class="stat-cell">
+                <div class="stat-label">CB Proj</div>
+                <div class="stat-value">${play.cbProjection}</div>
+              </div>
+              <div class="stat-cell">
+                <div class="stat-label">Line</div>
+                <div class="stat-value">${play.line}</div>
+              </div>
+              <div class="stat-cell">
+                <div class="stat-label">Edge</div>
+                <div class="stat-value ${edgePositive ? 'positive' : 'negative'}">${play.edgeGap}</div>
+              </div>
+            </div>
+
+            <div class="card-bottom">
+              <div class="info-row">
+                <div class="info-label">Trends</div>
+                <div class="info-value">${play.trends}</div>
+              </div>
+              <div class="info-row">
+                <div class="info-label">Splits</div>
+                <div class="info-value">${play.splits}</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      `;
+    });
+
+    container.innerHTML = html;
+  }
+
+  // ── INIT ─────────────────────────────────────────────────────
+  window.loadSlate = renderSlate;
+
+  const data = window.KINFOLK_SLATE || DEMO_SLATE;
+  renderSlate(data);
+</script>
+
+</body>
+</html>
