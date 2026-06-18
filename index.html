@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -545,8 +545,19 @@
   // ── INIT ─────────────────────────────────────────────────────
   window.loadSlate = renderSlate;
 
-  const data = window.KINFOLK_SLATE || DEMO_SLATE;
-  renderSlate(data);
+  // Try to load real slate.json, fall back to demo data
+  async function init() {
+    try {
+      const resp = await fetch('slate.json?t=' + Date.now());
+      if (!resp.ok) throw new Error('No slate.json yet');
+      const data = await resp.json();
+      renderSlate(data);
+    } catch (e) {
+      renderSlate(DEMO_SLATE);
+    }
+  }
+
+  init();
 </script>
 
 </body>
