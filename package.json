@@ -1,0 +1,15 @@
+{
+  "name": "team-kinfolk",
+  "version": "1.0.0",
+  "description": "MLB pitcher prop slate PWA — display layer for the CB Comprehension pipeline",
+  "private": true,
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "devDependencies": {
+    "ajv": "^8.17.1",
+    "happy-dom": "^15.11.7",
+    "vitest": "^2.1.8"
+  }
+}

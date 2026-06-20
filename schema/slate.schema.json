@@ -1,0 +1,73 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://victormolina16-byte.github.io/team-kinfolk/schema/slate.schema.json",
+  "title": "Team Kinfolk slate.json",
+  "description": "Contract between the local CB pipeline (push_to_pwa.py) and the PWA frontend. Accepts a superset reconciling CLAUDE.md with what the live pipeline emits.",
+  "type": "object",
+  "required": ["date", "updatedAt", "plays"],
+  "additionalProperties": true,
+  "properties": {
+    "date": { "type": "string", "minLength": 1 },
+    "updatedAt": { "type": "string", "minLength": 1 },
+    "plays": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/play" }
+    }
+  },
+  "definitions": {
+    "stringOrNumber": {
+      "$comment": "Live pipeline emits the em-dash placeholder \"—\" for fields it can't fill; CLAUDE.md documents numbers/signed strings. Accept both.",
+      "type": ["string", "number"]
+    },
+    "play": {
+      "type": "object",
+      "required": [
+        "rank",
+        "grade",
+        "pitcher",
+        "team",
+        "opponent",
+        "prop",
+        "direction",
+        "cbProjection"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "rank": { "type": "integer", "minimum": 1 },
+        "grade": {
+          "type": "string",
+          "enum": ["A", "B"],
+          "$comment": "Grade C/D are eliminated from the pipeline and must never appear in slate.json."
+        },
+        "pitcher": { "type": "string", "minLength": 1 },
+        "team": { "type": "string", "minLength": 1 },
+        "opponent": { "type": "string", "minLength": 1 },
+        "prop": {
+          "type": "string",
+          "$comment": "Accepts both pipeline abbreviations and the full names documented in CLAUDE.md.",
+          "enum": [
+            "K",
+            "HA",
+            "BB",
+            "ER",
+            "Outs",
+            "Strikeouts",
+            "Hits Allowed",
+            "Walks",
+            "Earned Runs"
+          ]
+        },
+        "direction": {
+          "type": "string",
+          "enum": ["Over", "Under", "OVER", "UNDER"]
+        },
+        "cbProjection": { "type": "number" },
+        "line": { "$ref": "#/definitions/stringOrNumber" },
+        "edgeGap": { "$ref": "#/definitions/stringOrNumber" },
+        "odds": { "$ref": "#/definitions/stringOrNumber" },
+        "trends": { "$ref": "#/definitions/stringOrNumber" },
+        "splits": { "$ref": "#/definitions/stringOrNumber" }
+      }
+    }
+  }
+}
