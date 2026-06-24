@@ -1,17 +1,17 @@
 {
   "date": "June 24, 2026",
-  "updatedAt": "2026-06-24T10:50:56.868291",
+  "updatedAt": "2026-06-24T16:03:59.251166",
   "plays": [
     {
       "rank": 1,
-      "grade": "A",
-      "pitcher": "Nolan McLean",
-      "team": "\u2014",
+      "grade": "B",
+      "pitcher": "Aaron Nola",
+      "team": "PHI",
       "opponent": "\u2014",
-      "prop": "BB",
+      "prop": "ER",
       "line": "\u2014",
       "direction": "OVER",
-      "cbProjection": 3.9,
+      "cbProjection": 4.0,
       "edgeGap": "\u2014",
       "odds": "\u2014",
       "trends": "\u2014",
