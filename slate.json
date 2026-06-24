@@ -1,17 +1,17 @@
 {
   "date": "June 24, 2026",
-  "updatedAt": "2026-06-24T16:03:59.251166",
+  "updatedAt": "2026-06-24T18:16:30.610442",
   "plays": [
     {
       "rank": 1,
       "grade": "B",
-      "pitcher": "Aaron Nola",
-      "team": "PHI",
+      "pitcher": "Martin Perez",
+      "team": "ATL",
       "opponent": "\u2014",
       "prop": "ER",
       "line": "\u2014",
-      "direction": "OVER",
-      "cbProjection": 4.0,
+      "direction": "UNDER",
+      "cbProjection": 1.8,
       "edgeGap": "\u2014",
       "odds": "\u2014",
       "trends": "\u2014",
